@@ -9,39 +9,82 @@ const db = admin.firestore();
 //get about 
 app.get("/about",async (req,res)=>{
     let about=[]
-   const about_info = await db.collection('about').get()
-  if (about_info.docs.length > 0) {
-    for (const info of about_info.docs) {
-     about.push(about_info.data())
-     
-  }}
-  res.json(about);
-  res.status(200);
+   const about_info = await db.collection('about')
+        .get()
+        .then( (snapshot) => {
+            if (snapshot.docs.length > 0) {
+                for (const info of snapshots.docs) {
+                 about.push(info.data())
+                 
+              }}
+              res.status(200).json(about);           
+        }
+          
+        )
+        .catch(
+           error => {
+             res.status(500).json({error:error})                   
+           }
+            
+        );
+ 
 
 });
 //post about
 app.post("/about",async (req,res) =>{
-    let docref = await db.collection("about").add({
-        sth :req.body.about.sth,
-    });
-    res.json({message:"Done"});
-    res.status(200);
+    let docref = await db.collection("about")
+        .add({
+          sth :req.body.about.sth,
+            })
+        .then(
+           (snapshot) => {
+            res.status(200).json({message:"Done"});
+           } 
+         
+        )
+        .catch(
+            error => {
+                res.status(500).json({error:error})                   
+              }
+        );
 
 });
 //update about
 app.put("/about/:id",async (req,res)=>{
   let docref =  db.collection("about").doc(req.body.user.name);
-  await docref.update({
-      sth:req.body.about.sth
-  });
-  res.json({message:"Done"});
-  res.status(200);
+  await docref
+        .update({
+         sth:req.body.about.sth
+                })
+        .then(
+           (snapshot) => {
+             res.status(200).json({message:"Done"});
+               } 
+            )
+        .catch(
+            error => {
+            res.status(500).json({error:error})                   
+               }
+              );        
+ 
 });
 //delete about
 app.delete("/about:id",async (req,res) =>{
-    await db.collection().doc(req.body.id).delete();
-    res.json({message:"done"});
-    res.status(200);
+    await db.collection()
+        .doc(req.body.id)
+        .delete()
+        .then(
+            (snapshot) => {
+             res.status(200).json({message:"Done"});
+            } 
+          
+         )
+         .catch(
+             error => {
+                 res.status(500).json({error:error})                   
+               }
+         );
+  
 });
 
 module.exports = app;
