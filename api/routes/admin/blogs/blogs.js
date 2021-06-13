@@ -50,7 +50,7 @@ app.post("/about",async (req,res,next) =>{
 
 });
 //update about
-app.put("/about/:id",async (req,res,next)=>{
+app.put("/about/:id",async (req,next)=>{
   let docref =  db.collection("about").doc(req.body.user.name);
   await docref
         .update({
